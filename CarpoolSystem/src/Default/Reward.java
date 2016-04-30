@@ -1,3 +1,4 @@
+package Default;
 interface GiveAPI{
     static final int BRONZE = 10;
     static final int SILVER = 20;

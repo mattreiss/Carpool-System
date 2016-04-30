@@ -1,3 +1,4 @@
+package System;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -5,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public abstract class CRUD
+public class DatabaseConnection
 {
 
 	private static Connection connection = null;
@@ -14,11 +15,18 @@ public abstract class CRUD
 	private static ResultSet resultSet = null;
 
 	private static final String DB_DVR = "com.mysql.jdbc.Driver";
-	private static final String DB_URL = "jdbc:mysql://localhost:3306/carpool_database";
+	private static final String DB_URL = "jdbc:mysql://localhost:3307/carpool_database";
 	private static final String DB_UID = "root";
 	private static final String DB_PWD = "admin";
+	private static final DatabaseConnection singletonDatabaseConnection = new DatabaseConnection();
 
-	protected CRUD()
+
+	public static DatabaseConnection getDatabaseConnection()
+	{
+		return singletonDatabaseConnection;
+	}
+	
+	private DatabaseConnection()
 	{
 		try
 		{
@@ -148,11 +156,10 @@ public abstract class CRUD
 		{
 			establishConnection();
 			prepStatement = connection.prepareStatement(sql);
-			prepStatement.executeUpdate();
-
-			int count = prepStatement.getUpdateCount();
+			prepStatement.execute();
 		} catch (SQLException eX)
 		{
+			System.out.println(sql);
 			System.out.println("SQLException: " + eX.getMessage());
 			System.out.println("SQLState: " + eX.getSQLState());
 			System.out.println("VendorError: " + eX.getErrorCode());

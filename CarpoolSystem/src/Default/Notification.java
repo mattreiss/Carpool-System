@@ -1,10 +1,11 @@
+package Default;
 import java.util.ArrayList;
 
 
 public abstract class Notification
 {
 	private ArrayList<NotificationObserver> observers = new ArrayList<NotificationObserver>();
-	protected ArrayList<ConfirmedState> confirmedStates = new ArrayList<ConfirmedState>();
+	public ArrayList<ConfirmedState> confirmedStates = new ArrayList<ConfirmedState>();
 	
 	
 	public void add(NotificationObserver no)

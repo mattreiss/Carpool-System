@@ -1,8 +1,9 @@
+package Default;
 
-public class DriverConfirmedState implements ConfirmedState
+public class CarpoolConfirmedState implements ConfirmedState
 {
 
-	public DriverConfirmedState()
+	public CarpoolConfirmedState()
 	{
 		// TODO Auto-generated constructor stub
 	}
@@ -27,10 +28,10 @@ public class DriverConfirmedState implements ConfirmedState
 		// TODO Auto-generated method stub
 
 	}
-
+	
 	@Override
 	public String toString()
 	{
-		return "Passenger is not Confirmed.";
+		return "Passenger and Driver are Confirmed.";
 	}
 }

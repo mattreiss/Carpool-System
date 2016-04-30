@@ -1,3 +1,4 @@
+package Default;
 
 public interface NotificationObserver
 {

@@ -1,4 +1,11 @@
+package Default;
 import java.util.ArrayList;
+
+import PersistentObjects.Carpool;
+import PersistentObjects.Ride;
+import PersistentObjects.ScheduleItem;
+import PersistentObjects.Vehicle;
+import System.SystemPrompt;
 
 public class SchedSchemeSystem extends SchedSchemeTemplate {
 	Vehicle v = null;
@@ -6,7 +13,7 @@ public class SchedSchemeSystem extends SchedSchemeTemplate {
 	
 	@Override
 	void getSchedule() {
-		schedule = UI.viewSchedule("carpool_ride_id is null AND ride_id is null");
+		schedule = SystemPrompt.viewSchedule("carpool_ride_id is null AND ride_id is null");
 	}
 	
 	@Override
@@ -41,14 +48,14 @@ public class SchedSchemeSystem extends SchedSchemeTemplate {
 			System.out.print("The following passengers were added and will be notified:");
 			System.out.println(s.toString());
 			carpool =  new Carpool(ride,s,s.getTime(), 1, 0);
-			UI.dba.createCarpool(carpool);	
+			SystemPrompt.dba.createCarpool(carpool);	
 		}
 	}
 
 	@Override
 	void matchScheduleStep() {
-		matches = UI.dba.matchSchedules
-				(ride.getSchedule(),UI.commuter.getID(), false);
+		matches = SystemPrompt.dba.matchSchedules
+				(ride.getSchedule(),SystemPrompt.commuter.getID(), false);
 	}
 	
 	/*
@@ -57,7 +64,7 @@ public class SchedSchemeSystem extends SchedSchemeTemplate {
 	@Override
 	void rideStep() {
 		ride = new Ride(v.getSeats(), v, selected);
-		ride.setID(UI.dba.createRide(ride));	
+		ride.setID(SystemPrompt.dba.createRide(ride));	
 	}
 	
 	/*
@@ -65,13 +72,13 @@ public class SchedSchemeSystem extends SchedSchemeTemplate {
 	 */
 	@Override
 	boolean vehicleStep() {
-		ArrayList<Vehicle> vehicles = UI.viewVehicles();
+		ArrayList<Vehicle> vehicles = SystemPrompt.viewVehicles();
 		if (vehicles == null) {
 			System.out.print("You must have a vehicle to create a ride");
 			return false;
 		} else {
 			System.out.println("Please select the vehicle for the ride:");
-			int index = Integer.parseInt(UI.in.nextLine());
+			int index = Integer.parseInt(SystemPrompt.in.nextLine());
 			v = vehicles.get(index);
 			return true;
 		}
