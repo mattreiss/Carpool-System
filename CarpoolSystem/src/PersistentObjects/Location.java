@@ -1,7 +1,6 @@
 package PersistentObjects;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Location implements PersistentObject
@@ -11,7 +10,6 @@ public class Location implements PersistentObject
 	private int zip;
 	private float latitude;
 	private float longitude;
-	boolean shouldPersist = true;
 
 	public Location() { this.id = -1; }
 	
@@ -42,32 +40,38 @@ public class Location implements PersistentObject
 	public void setLongitude(float lon)     {this.longitude = lon;}
 
 	@Override
-	public String getCreateSQL() 
+	public String create() 
 	{
 		String table = "location (address, zip, latitude, longitude)";
 		String values = "'" + address + "', '" + zip + "', '" + latitude + "', '" + longitude + "'";
 		String sql = "INSERT INTO " + table + "VALUES (" + values + ");";
+		id = db.create(sql);
 		return sql;
 	}
 
 	@Override
-	public String getRetrieveSQL() {
+	public String retrieve() {
 		String sql = "SELECT * FROM location WHERE id = '" + id + "'";
+		parseResultSet(db.retrieve(sql));
+		db.closeConnection();
 		return sql;
 	}
 
 	@Override
-	public String getUpdateSQL() 
+	public String update() 
 	{
 		String sql = "UPDATE location SET address = '" + address + "', zip = '" + zip + "', latitude = '"
 				+ latitude + "', longitude = '" + longitude + "' WHERE id = '" + id + "'";
+		db.update(sql);
 		return sql;
 	}
 
 	@Override
-	public String getDeleteSQL() 
+	public String delete() 
 	{
-		return "DELETE FROM location WHERE id = " + id;
+		String sql = "DELETE FROM location WHERE id = " + id;
+		db.update(sql);
+		return sql;
 	}
 
 	@Override
@@ -105,22 +109,8 @@ public class Location implements PersistentObject
 		int z = 0;
 		try { z = Integer.parseInt(in.nextLine()); } catch (Exception e) { };
 		if ( z > 0 && z < 8 ) zip = z;
-	}
-
-    /**
-     * @return an arraylist of all PersistentObjects within a location
-     */
-	@Override
-	public ArrayList<PersistentObject> getPersistentObjects() 
-	{
-		ArrayList<PersistentObject> po = new ArrayList<PersistentObject>();
-		return po;
-	}
-
-	@Override
-	public boolean isPersistent() 
-	{
-		return shouldPersist;
+		
+		create();
 	}
 	
 	@Override

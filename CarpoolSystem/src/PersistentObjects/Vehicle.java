@@ -1,6 +1,5 @@
 package PersistentObjects;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -15,10 +14,11 @@ public class Vehicle implements PersistentObject
 	public int year;
 	public String color;
 
-	public Vehicle() { };
+	public Vehicle() { id = -1;};
 
 	public Vehicle(int seats, String make, String model, int year, String color)
 	{
+		this();
 		this.seats = seats;
 		this.make = make;
 		this.model = model;
@@ -57,25 +57,25 @@ public class Vehicle implements PersistentObject
 	}
 
 		@Override
-		public String getCreateSQL() {
+		public String create() {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
-		public String getRetrieveSQL() {
+		public String retrieve() {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
-		public String getUpdateSQL() {
+		public String update() {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
-		public String getDeleteSQL() {
+		public String delete() {
 			// TODO Auto-generated method stub
 			return null;
 		}
@@ -87,24 +87,33 @@ public class Vehicle implements PersistentObject
 		}
 
 
-	    /**
-	     * @return an arraylist of all PersistentObjects within a vehicle
-	     */
 		@Override
-		public ArrayList<PersistentObject> getPersistentObjects() {
-			// TODO Auto-generated method stub
-			return null;
-		}
+		public void manage(Scanner in) 
+		{
 
-		@Override
-		public void manage(Scanner in) {
-			// TODO Auto-generated method stub
+			System.out.println("Enter the number of seats: ");
+			int seats = Integer.parseInt(in.nextLine());
+			System.out.println("Enter the make: ");
+			String make = in.nextLine();
+			System.out.println("Enter the model: ");
+			String model = in.nextLine();
+			System.out.println("Enter the year: ");
+			int year = Integer.parseInt(in.nextLine());
+			System.out.println("Enter the color: ");
+			String color = in.nextLine();
+
+			Vehicle vehicle = new Vehicle(seats, make, model, year, color);
+			System.out.println("    vehicle info: ");
+			System.out.println("        seats: " + vehicle.getSeats());
+			System.out.println("        make: " + vehicle.getMake());
+			System.out.println("        model: " + vehicle.getModel());
+			System.out.println("        year: " + vehicle.getYear());
+
+			System.out.println("Is this correct? [y]es or [n]o:");
+			String confirm = in.nextLine();
+			if (confirm.equalsIgnoreCase("y") || confirm.contains("y"))
+				return;
 			
 		}
 
-		@Override
-		public boolean isPersistent() {
-			// TODO Auto-generated method stub
-			return false;
-		}
 }

@@ -1,23 +1,23 @@
 package Default;
 import java.util.ArrayList;
 
+import System.Alert;
+
 
 public abstract class Notification
 {
 	private ArrayList<NotificationObserver> observers = new ArrayList<NotificationObserver>();
-	public ArrayList<ConfirmedState> confirmedStates = new ArrayList<ConfirmedState>();
-	
 	
 	public void add(NotificationObserver no)
 	{
 		observers.add(no);
 	}
 	
-	public void notifyUpdate()
+	public void alert(Alert a)
 	{
 		for (NotificationObserver o: observers)
 		{
-			o.update(this);
+			o.alert(a);
 		}
 	}
 }

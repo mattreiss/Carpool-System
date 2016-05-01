@@ -1,7 +1,6 @@
 package PersistentObjects;
 
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -44,25 +43,25 @@ public class Carpool implements PersistentObject
 	public void setPassengerStatus(int status) { passenger_status = status; }
 
 	@Override
-	public String getCreateSQL() {
+	public String create() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getRetrieveSQL() {
+	public String retrieve() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getUpdateSQL() {
+	public String update() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getDeleteSQL() {
+	public String delete() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -73,29 +72,41 @@ public class Carpool implements PersistentObject
 		
 	}
 
-
-    /**
-     * @return an arraylist of all PersistentObjects within a carpool
-     */
 	@Override
-	public ArrayList<PersistentObject> getPersistentObjects() {
-		// TODO Auto-generated method stub
-		return null;
+	public void manage(Scanner in) 
+	{
+		System.out.println("[1] Request a ride");
+		System.out.println("[2] Create a ride");
+		System.out.println("[3] Find passengers for my ride");
+		System.out.println("[4] View my rides");
+		System.out.println("[5] Cancel a ride");
+		System.out.println("[6] See rewards");
+		System.out.println("[0] Cancel");
+		String res1 = in.nextLine();
+		switch (res1)
+		{
+		case "1":
+			//scheduleRide(new SchedSchemeRider());
+			break;
+		case "2":
+			//scheduleRide(new SchedSchemeSystem());
+			break;
+		case "3":
+			//scheduleRide(new SchedSchemeDriver());
+			break;
+		case "4":
+			//viewRides(null);
+			break;
+		case "5":
+			//cancelRide();
+			break;
+		case "6":
+			//seeRewards();
+			break;
+		case "0":
+		default:
+			System.out.println("Cancelling...");
+		}
 	}
-
-	@Override
-	public void manage(Scanner in) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean isPersistent() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
-	
-	
 
 }

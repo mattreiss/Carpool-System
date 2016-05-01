@@ -15,7 +15,7 @@ public class Commuter implements PersistentObject
 	private String password; 
 	private ArrayList<ScheduleItem> schedule = new ArrayList<>(); // has a Persistent object
 	public Vehicle vehicle; // has a Persistent object
-	boolean shouldPersist = true;
+	private Location location;
 	
 	public Commuter(int id, String firstName, String lastName, String email, String password) 
 	{
@@ -47,38 +47,45 @@ public class Commuter implements PersistentObject
     public void setSchedule(ArrayList<ScheduleItem> s) { this.schedule = s; }
 	public void setVehicle(Vehicle vehicle) { this.vehicle = vehicle; }
 
-	public void addSchedule(ScheduleItem schedule) { this.schedule.add(schedule); }
 	
-    public String getCreateSQL()
+    public String create()
     {
     	String table = "commuter (first_name, last_name, email, password)";
 		String values = "'" + firstName + "', '" + lastName
 				+ "', '" + email+ "', '" + password + "'";
 		String sql = "INSERT INTO " + table + "VALUES (" + values + ");";
+		id = db.create(sql);
 		return sql;
     }
 
-    public String getRetrieveSQL()
+    public String retrieve()
     {
 		String sql = "SELECT * FROM commuter WHERE email = '" + email + "'";
+		parseResultSet(db.retrieve(sql));
+		db.closeConnection();
 		return sql;
     }
     
-    public String getUpdateSQL()
+    public String update()
     {	
 		String sql = "UPDATE commuter SET email = '" + email + "', password = '" + password + "', first_name = '"
 				+ firstName + "', last_name = '" + lastName + "' WHERE id = '" + id + "';";
+		db.update(sql);
 		return sql;
     }
     
-    public String getDeleteSQL()
+    public String delete()
     {
-		return "DELETE FROM commuter WHERE id = '" + id + "'";
+		String sql = "DELETE FROM commuter WHERE id = '" + id + "'";
+		db.update(sql);
+		return sql;
     }
     
-    public String getRetrieveScheduleSQL()
+    public String retrieveSchedule()
     {
 		String sql = "SELECT * FROM commuterschedule WHERE commuter_id  = '" + id + "'";
+		parseScheduleResultSet(db.retrieve(sql));
+		db.closeConnection();
 		return sql;
     }
     
@@ -178,6 +185,7 @@ public class Commuter implements PersistentObject
 					break;
 				}
 			}
+			update();
 			break;
 		case "3"://Delete Account
 			System.out.println("Are you sure you want to delete your account? [y]es or [n]o:");
@@ -185,7 +193,7 @@ public class Commuter implements PersistentObject
 			if (confirm.equalsIgnoreCase("y") || confirm.contains("y"))
 			{
 				System.out.println("Deleting Account...");
-				this.shouldPersist = false;
+				delete();
 			}
 			break;
 		case "0"://Cancel
@@ -196,6 +204,7 @@ public class Commuter implements PersistentObject
     
     public void manageSchedule(Scanner in)
     {
+    	retrieveSchedule();
 		System.out.println("[1] Add Schedule");
 		System.out.println("[2] View Schedule");
 		System.out.println("[3] Edit Schedule");
@@ -212,20 +221,18 @@ public class Commuter implements PersistentObject
 			System.out.println("\n\n*****My Schedule*****");
 			for (int i = 0; i < schedule.size(); i++)
 			{
-				if (schedule.get(i).shouldPersist)
-					System.out.println("[" + (i+1) + "] " + schedule.get(i).toString());
+				System.out.println("[" + (i+1) + "] " + schedule.get(i).toString());
 			}
 			break;
 		case "3": // Edit Schedule
 			boolean done = false;
 			while (!done)
 			{	
-				System.out.println("Edit Schedule:");
+				System.out.println("\nEdit Schedule:");
 				
 				for (int i = 0; i < schedule.size(); i++)
 				{
-					if (schedule.get(i).shouldPersist)
-						System.out.println("[" + (i+1) + "] " + schedule.get(i).toString());
+					System.out.println("[" + (i+1) + "] " + schedule.get(i).toString());
 				}
 				System.out.println("[0] Done");
 				String n = in.nextLine();
@@ -244,11 +251,10 @@ public class Commuter implements PersistentObject
 			done = false;
 			while (!done)
 			{	
-				System.out.println("Delete Schedule:");
+				System.out.println("\nDelete Schedule:");
 				for (int i = 0; i < schedule.size(); i++)
 				{
-					if (schedule.get(i).shouldPersist)
-						System.out.println("[" + (i+1) + "] " + schedule.get(i).toString());
+					System.out.println("[" + (i+1) + "] " + schedule.get(i).toString());
 				}
 				System.out.println("[0] Done");
 				String n = in.nextLine();
@@ -262,7 +268,7 @@ public class Commuter implements PersistentObject
 						if (confirm.equalsIgnoreCase("y") || confirm.contains("y"))
 						{
 							System.out.println("Deleting Schedule...");
-							schedule.get(i).shouldPersist = false;
+							schedule.get(i).delete();
 						}
 						break;
 					}
@@ -276,26 +282,11 @@ public class Commuter implements PersistentObject
 		}
     }
 
-    /**
-     * @return an arraylist of all PersistentObjects within a commuter
-     */
-	@Override
-	public ArrayList<PersistentObject> getPersistentObjects() 
-	{
-		ArrayList<PersistentObject> objects = new ArrayList<PersistentObject>();
-		for (ScheduleItem s: schedule)
-		{
-			for (PersistentObject p: s.getPersistentObjects())
-				objects.add(p);
-			objects.add(s);
-		}
-		if (vehicle != null) objects.add(vehicle);
-		return objects;
+	public Location getLocation() {
+		return location;
 	}
 
-	@Override
-	public boolean isPersistent() 
-	{
-		return shouldPersist;
+	public void setLocation(Location location) {
+		this.location = location;
 	}
 }

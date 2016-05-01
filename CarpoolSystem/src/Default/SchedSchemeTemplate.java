@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 import PersistentObjects.Carpool;
 import PersistentObjects.ScheduleItem;
-import System.SystemPrompt;
+import System.SystemInterface;
 /**
  * SchedSchemeTemplate
  * @author LanceB
@@ -37,7 +37,7 @@ public abstract class SchedSchemeTemplate implements SchedScheme {
 	boolean vehicleStep() { return true; }
 	
 	void getSchedule() {
-		schedule = SystemPrompt.viewSchedule("carpool_ride_id is null");
+		schedule = SystemInterface.viewSchedule("carpool_ride_id is null");
 	}
 	
 	/**
@@ -47,7 +47,7 @@ public abstract class SchedSchemeTemplate implements SchedScheme {
 	boolean scheduleStep() {		
 		if (schedule.size() > 0) {
 			System.out.println("Please select the schedule for the ride:");
-			int index = Integer.parseInt(SystemPrompt.in.nextLine());
+			int index = Integer.parseInt(SystemInterface.in.nextLine());
 			selected = schedule.get(index);
 			return true;		
 		} else
@@ -74,7 +74,7 @@ public abstract class SchedSchemeTemplate implements SchedScheme {
 			
 			// request commuters for a carpool
 			System.out.println("Please select matching schedule:");
-			int index = Integer.parseInt(SystemPrompt.in.nextLine());
+			int index = Integer.parseInt(SystemInterface.in.nextLine());
 			return schedule.get(index);
 		} else {
 			System.out.println("No matches found.");

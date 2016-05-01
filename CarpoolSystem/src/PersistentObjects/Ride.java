@@ -1,6 +1,5 @@
 package PersistentObjects;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Ride implements PersistentObject
@@ -37,25 +36,25 @@ public class Ride implements PersistentObject
 	public void setSchedule(ScheduleItem s) {this.schedule = s;}
 
 	@Override
-	public String getCreateSQL() {
+	public String create() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getRetrieveSQL() {
+	public String retrieve() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getUpdateSQL() {
+	public String update() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getDeleteSQL() {
+	public String delete() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -70,21 +69,6 @@ public class Ride implements PersistentObject
 	public void manage(Scanner in) {
 		// TODO Auto-generated method stub
 		
-	}
-
-    /**
-     * @return an arraylist of all PersistentObjects within a ride
-     */
-	@Override
-	public ArrayList<PersistentObject> getPersistentObjects() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean isPersistent() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 	
 }

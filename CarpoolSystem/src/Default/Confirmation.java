@@ -1,7 +1,7 @@
 package Default;
 import java.util.ArrayList;
 
-public class Confirmation extends Notification
+public class Confirmation 
 {
 	public Confirmation()
 	{
@@ -9,7 +9,5 @@ public class Confirmation extends Notification
 	
 	public void setConfirmedStates(ArrayList<ConfirmedState> s)
 	{
-		confirmedStates = s;
-		notifyUpdate();
 	}
 }

@@ -1,7 +1,6 @@
 package PersistentObjects;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ScheduleItem implements PersistentObject
@@ -12,7 +11,6 @@ public class ScheduleItem implements PersistentObject
     private Location from;
     private Location to;
     private int commuterID;
-	boolean shouldPersist = true;
     
     String[] dow = {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
 
@@ -59,32 +57,41 @@ public class ScheduleItem implements PersistentObject
     }
 
 	@Override
-	public String getCreateSQL() 
+	public String create() 
 	{
 		String table = "schedule (start_date, end_date, weekday, commit_time, commuter_id, from_location_id, to_location_id)";
 		String values = "'2016-1-20','2016-5-15','" + weekday + "', '" + time + "', " + commuterID + "," + from.getID() + "," + to.getID();
 		String sql = "INSERT INTO " + table + " VALUES (" + values + ");";
+		id = db.create(sql);
+		
+		alert.setAlert("NEW SCHEDULE ALERT!!!"); // use of observer pattern.
+		
 		return sql;
 	}
 
 	@Override
-	public String getRetrieveSQL() {
+	public String retrieve() {
 		String sql = "SELECT * FROM schedule WHERE id = " + id;
+		parseResultSet(db.retrieve(sql));
+		db.closeConnection();
 		return sql;
 	}
 
 	@Override
-	public String getUpdateSQL() 
+	public String update() 
 	{
 		String sql = "UPDATE schedule SET weekday = '" + weekday + "', commit_time = '" + time + "', commuter_id = '"
 				+ commuterID + "', from_location_id = '" + from.getID() +"', to_location_id = '" + to.getID() + "' WHERE id = '" + id + "';";
+		db.update(sql);
 		return sql;
 	}
 
 	@Override
-	public String getDeleteSQL() 
+	public String delete() 
 	{
-		return "DELETE FROM schedule WHERE id = " + id;
+		String sql = "DELETE FROM schedule WHERE id = " + id;
+		db.update(sql);
+		return sql;
 	}
 
 	@Override
@@ -111,7 +118,7 @@ public class ScheduleItem implements PersistentObject
 	@Override
 	public void manage(Scanner in) 
 	{
-		System.out.println("New Schedule:");
+		System.out.println("\nNew Schedule:");
 		
 		System.out.println("Day [1]Sun [2]Mon [3]Tue [4]Wed [5]Thu [6]Fri [7]Sat:");
 		if (weekday > 0 ) System.out.print("["+(weekday)+"]"+dow[weekday-1] + " -> ");
@@ -133,23 +140,7 @@ public class ScheduleItem implements PersistentObject
 		if (to == null) to = new Location();
 		to.manage(in);
 		
+		create();
 	}
 
-    /**
-     * @return an arraylist of all PersistentObjects within a scheduleItem
-     */
-	@Override
-	public ArrayList<PersistentObject> getPersistentObjects() {
-		// TODO Auto-generated method stub
-		ArrayList<PersistentObject> objects =  new ArrayList<PersistentObject>();
-		objects.add(to);
-		objects.add(from);
-		return objects;
-	}
-
-	@Override
-	public boolean isPersistent() 
-	{
-		return shouldPersist;
-	}
 }

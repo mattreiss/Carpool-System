@@ -1,6 +1,8 @@
 package Default;
 
+import System.Alert;
+
 public interface NotificationObserver
 {
-	void update(Notification notification);
+	void alert(Alert a);
 }

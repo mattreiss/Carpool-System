@@ -1,18 +1,18 @@
 package Default;
 import PersistentObjects.Carpool;
-import System.SystemPrompt;
+import System.SystemInterface;
 
 public class SchedSchemeRider extends SchedSchemeTemplate {
 
 	@Override
 	void matchScheduleStep() {
-		matches = SystemPrompt.dba.matchSchedules
-				(selected,SystemPrompt.commuter.getID(), true);
+		matches = SystemInterface.dba.matchSchedules
+				(selected,SystemInterface.commuter.getID(), true);
 	}
 	
 	@Override
 	void carpoolStep() {
 		carpool =  new Carpool(matched.getRide(),selected,selected.getTime(), 0, 1);
-		SystemPrompt.dba.createCarpool(carpool);
+		SystemInterface.dba.createCarpool(carpool);
 	}
 }

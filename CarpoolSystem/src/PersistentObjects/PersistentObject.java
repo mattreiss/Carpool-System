@@ -1,18 +1,22 @@
 package PersistentObjects;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.Scanner;
 
-public interface PersistentObject 
+import System.Alert;
+import System.DatabaseConnection;
+
+
+public interface PersistentObject
 {	
+	public static final Alert alert = new Alert();
+	public static final DatabaseConnection db = DatabaseConnection.getDatabaseConnection();;
+	
 	public int getID();
 	public void setID(int id);
-    public String getCreateSQL();
-    public String getRetrieveSQL();
-    public String getUpdateSQL();
-    public String getDeleteSQL();
+    public String create();
+    public String retrieve();
+    public String update();
+    public String delete();
     public void parseResultSet(ResultSet rs);
     public void manage(Scanner in);
-	public ArrayList<PersistentObject> getPersistentObjects();
-	public boolean isPersistent();
 }
