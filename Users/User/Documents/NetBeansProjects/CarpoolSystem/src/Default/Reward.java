@@ -1,9 +1,14 @@
 package Default;
+
+import static Default.RewardAPI.MILE_BRONZE;
+
 interface RewardAPI{
     static final int BRONZE = 10;
     static final int SILVER = 20;
     static final int GOLD = 30;
-    static final int MILE_COUNT = 100;
+    static final int MILE_BRONZE = 100;
+    static final int MILE_SILVER = 200;
+    static final int MILE_GOLD = 300;
     public void giveRewardByPassenger(int count);
     public void giveRewardByMile(int mile);
 }
@@ -99,7 +104,7 @@ class RewardsByPassenger_Gold implements RewardAPI{
 }
 
 
-class RewardsByMile implements RewardAPI{
+class RewardsByMileBronze implements RewardAPI{
 
     @Override
     public void giveRewardByPassenger(int count) {
@@ -109,16 +114,49 @@ class RewardsByMile implements RewardAPI{
     @Override
     public void giveRewardByMile(int mile) {
         
-        if(mile < MILE_COUNT){
-            System.out.println("You need " + (MILE_COUNT - mile) + " more miles to get the reward.");
+        if(mile < MILE_BRONZE){
+            System.out.println("You need " + (MILE_BRONZE - mile) + " more miles to get the reward.");
         }
-        else if (mile == MILE_COUNT){
-            System.out.println("You get a reward!");
+        else if (mile == MILE_BRONZE){
+            System.out.println("You get a bronze reward! You need" + (MILE_SILVER - mile) 
+                    + " more miles to get Silver reward.");
         }
-        else 
-            System.out.println("Well done, you passed reward by " + (mile - MILE_COUNT) + " miles!");
+    }
+}
+
+class RewardsByMileSilver implements RewardAPI{
+
+    @Override
+    public void giveRewardByPassenger(int count) {
+        throw new UnsupportedOperationException("Not supported yet."); 
+    }
+
+    @Override
+    public void giveRewardByMile(int mile) {
         
-    
+        if(mile < MILE_SILVER){
+            System.out.println("You need " + (MILE_BRONZE - mile) + " more miles to get the reward.");
+        }
+        else if (mile == MILE_SILVER){
+            System.out.println("You get a Silver reward! You need " + (MILE_GOLD - mile)
+                    + " more miles to get the reward.");
+        }
+    }
+}
+
+class RewardByMileGold implements RewardAPI{
+    @Override
+    public void giveRewardByPassenger(int count){
+        
     }
     
+    @Override
+    public void giveRewardByMile(int mile){
+        if(mile < MILE_GOLD){
+            System.out.println("You need " + (MILE_GOLD - mile) + " more miles to get the reward.");
+        }
+        else if (mile == MILE_GOLD){
+            System.out.println("You get a Gold reward!");
+        }
+    }
 }

@@ -37,8 +37,11 @@ public class Ride implements PersistentObject
 
 	@Override
 	public String create() {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "INSERT INTO ride (vacancy, driver_schedule_id, vehicle_id) "
+				+ "VALUES ('" + getVacancy() + "', '"
+				+ getSchedule().getID() + "', '"
+				+ getVehicle().getID() + "')";
+                return sql;
 	}
 
 	@Override
