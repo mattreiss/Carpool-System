@@ -35,8 +35,6 @@ public class SystemInterface implements NotificationObserver
 				}
 			}
 			if (shouldExit) break;
-			
-			//do c.setConfirmedStates(db.retrieveConfirmedStates(commuter.getID()));
 			while (runCarpoolSystem(in));
 		}
 		in.close();
@@ -104,7 +102,7 @@ public class SystemInterface implements NotificationObserver
 	public static Commuter authenticate(Scanner in)
 	{
 		Commuter commuter = null;
-		System.out.println("\n\n*****Authentiate*****");
+		System.out.println("\n\n*****Authenticate*****");
 		System.out.println("[1] Log in");
 		System.out.println("[2] Sign up");
 		System.out.println("[0] Exit");

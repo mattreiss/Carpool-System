@@ -1,5 +1,7 @@
 package PersistentObjects;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -13,8 +15,10 @@ public class Vehicle implements PersistentObject
 	public String model;
 	public int year;
 	public String color;
+	public int commuterId;
 
 	public Vehicle() { id = -1;};
+	public Vehicle(int commuterId) { this.commuterId = commuterId;};
 
 	public Vehicle(int seats, String make, String model, int year, String color)
 	{
@@ -57,15 +61,25 @@ public class Vehicle implements PersistentObject
 	}
 
 		@Override
-		public String create() {
-			// TODO Auto-generated method stub
-			return null;
+		public String create() 
+		{
+			String sql = "INSERT INTO vehicle (capacity, make, model, year, color, driver_commuter_id) "
+					+ "VALUES ('" + getSeats() + "', '" + getMake() + "', '"
+					+ getModel() + "', '" + getYear() + "', '" + getColor()
+					+ "', '" + commuterId + "')";
+			setID(db.create(sql));
+			return sql;
 		}
 
 		@Override
-		public String retrieve() {
-			// TODO Auto-generated method stub
-			return null;
+		public String retrieve() 
+		{
+			if (commuterId <= 0) return null;
+			ArrayList<Vehicle> vehicles = new ArrayList<>();
+			String sql = "SELECT * FROM vehicle WHERE driver_commuter_id = '" + commuterId + "'";
+			parseResultSet(db.retrieve(sql));
+			db.closeConnection();
+			return sql;
 		}
 
 		@Override
@@ -81,39 +95,42 @@ public class Vehicle implements PersistentObject
 		}
 
 		@Override
-		public void parseResultSet(ResultSet rs) {
-			// TODO Auto-generated method stub
-			
+		public void parseResultSet(ResultSet rs) 
+		{
+			try
+			{
+				if (rs.next())
+				{
+					seats = rs.getInt("capacity");
+					make = rs.getString("make");
+					model = rs.getString("model");
+					year = rs.getInt("year");
+					color = rs.getString("color");
+					id = rs.getInt("id");
+				}
+			} catch (SQLException eX)
+			{
+				System.out.println("SQLException: " + eX.getMessage());
+				System.out.println("SQLState: " + eX.getSQLState());
+				System.out.println("VendorError: " + eX.getErrorCode());
+			}
 		}
 
 
 		@Override
 		public void manage(Scanner in) 
 		{
-
-			System.out.println("Enter the number of seats: ");
-			int seats = Integer.parseInt(in.nextLine());
-			System.out.println("Enter the make: ");
-			String make = in.nextLine();
-			System.out.println("Enter the model: ");
-			String model = in.nextLine();
-			System.out.println("Enter the year: ");
-			int year = Integer.parseInt(in.nextLine());
-			System.out.println("Enter the color: ");
-			String color = in.nextLine();
-
-			Vehicle vehicle = new Vehicle(seats, make, model, year, color);
-			System.out.println("    vehicle info: ");
-			System.out.println("        seats: " + vehicle.getSeats());
-			System.out.println("        make: " + vehicle.getMake());
-			System.out.println("        model: " + vehicle.getModel());
-			System.out.println("        year: " + vehicle.getYear());
-
-			System.out.println("Is this correct? [y]es or [n]o:");
-			String confirm = in.nextLine();
-			if (confirm.equalsIgnoreCase("y") || confirm.contains("y"))
-				return;
-			
+			System.out.println("\nAdd Vehicle: ");
+			System.out.println("Make: ");
+			make = in.nextLine();
+			System.out.println("Model: ");
+			model = in.nextLine();
+			System.out.println("Year: ");
+			year = Integer.parseInt(in.nextLine());
+			System.out.println("Color: ");
+			color = in.nextLine();
+			System.out.println("Seat capacity: ");
+			seats = Integer.parseInt(in.nextLine());
 		}
 
 }

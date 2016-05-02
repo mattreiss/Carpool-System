@@ -21,55 +21,6 @@ import PersistentObjects.Vehicle;
 
 public class DBA 
 {
-	
-	public int createVehicle(Vehicle v, int commuterID)
-	{
-		String sql = "INSERT INTO vehicle (capacity, make, model, year, color, driver_commuter_id) "
-				+ "VALUES ('" + v.getSeats() + "', '" + v.getMake() + "', '"
-				+ v.getModel() + "', '" + v.getYear() + "', '" + v.getColor()
-				+ "', '" + commuterID + "')";
-		return create(sql);
-	}
-
-	public ArrayList<Vehicle> retrieveVehicles(int commuterID)
-	{
-		ArrayList<Vehicle> vehicles = new ArrayList<>();
-		String sql = "SELECT * FROM vehicle WHERE driver_commuter_id = '"
-				+ commuterID + "'";
-		ResultSet results = super.retrieve(sql);
-		try
-		{
-			while (results.next())
-			{
-				Vehicle v = new Vehicle(results.getInt("capacity"),
-						results.getString("make"), results.getString("model"),
-						results.getInt("year"), results.getString("color"));
-				v.setID(results.getInt("id"));
-				vehicles.add(v);
-			}
-		} catch (SQLException eX)
-		{
-			System.out.println("SQLException: " + eX.getMessage());
-			System.out.println("SQLState: " + eX.getSQLState());
-			System.out.println("VendorError: " + eX.getErrorCode());
-		} finally
-		{
-			super.closeConnection();
-		}
-
-		return vehicles;
-	}
-
-	public void updateVehicle()
-	{
-		// to do
-	}
-
-	public void deleteVehicle()
-	{
-
-	}
-
 	public int createRide(Ride ride)
 	{
 		String sql = "INSERT INTO ride (vacancy, driver_schedule_id, vehicle_id) "

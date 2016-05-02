@@ -15,7 +15,7 @@ public class DatabaseConnection
 	private static ResultSet resultSet = null;
 
 	private static final String DB_DVR = "com.mysql.jdbc.Driver";
-	private static final String DB_URL = "jdbc:mysql://localhost:3306/carpool_database";
+	private static final String DB_URL = "jdbc:mysql://localhost:3307/carpool_database";
 	private static final String DB_UID = "root";
 	private static final String DB_PWD = "admin";
 	private static final DatabaseConnection singletonDatabaseConnection = new DatabaseConnection();

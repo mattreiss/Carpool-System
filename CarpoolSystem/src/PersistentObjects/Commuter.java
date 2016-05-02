@@ -20,6 +20,8 @@ public class Commuter implements PersistentObject
 	public Commuter(int id, String firstName, String lastName, String email, String password) 
 	{
 		update(id,firstName,lastName,email,password);
+		vehicle = new Vehicle(id);
+		vehicle.retrieve();
 	}
 	
 	public void update(int id, String firstName, String lastName, String email, String password) 
