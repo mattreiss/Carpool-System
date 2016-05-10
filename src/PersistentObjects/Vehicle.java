@@ -18,8 +18,14 @@ public class Vehicle implements PersistentObject
 	public int commuterId;
 
 	public Vehicle() { id = -1;};
-	public Vehicle(int commuterId) { this.commuterId = commuterId;};
-
+	public Vehicle(int commuterId) { this(); this.commuterId = commuterId; };
+	
+	public Vehicle(int commuterId, int vehId) {
+		this.commuterId = commuterId;
+		this.id = vehId;
+		retrieve();
+	}
+	
 	public Vehicle(int seats, String make, String model, int year, String color)
 	{
 		this();
@@ -60,56 +66,65 @@ public class Vehicle implements PersistentObject
 		return "" + year + " " + color + " " + make + " " + model + " with " + seats + " seats available";
 	}
 
+	@Override
+	public String create() 
+	{
+		String sql = "INSERT INTO vehicle (capacity, make, model, year, color, driver_commuter_id) "
+				+ "VALUES ('" + getSeats() + "', '" + getMake() + "', '"
+				+ getModel() + "', '" + getYear() + "', '" + getColor()
+				+ "', '" + commuterId + "')";
+		setID(db.create(sql));
+		return sql;
+	}
+
+	@Override
+	public String retrieve() 
+	{
+		if (id <= 0) return null;
+		String sql = "SELECT * FROM vehicle WHERE id = '" + id + "'";
+		parseResultSet(db.retrieve(sql));
+		db.closeConnection();
+		return sql;
+	}
+	
+	public String retrieveCommuterVehicle() 
+	{
+		String sql = "SELECT * FROM vehicle WHERE driver_commuter_id = '" + commuterId + "'";
+		parseResultSet(db.retrieve(sql));
+		db.closeConnection();
+		return sql;
+	}
+	
 		@Override
-		public String create() 
+		public String update() 
 		{
-			String sql = "INSERT INTO vehicle (capacity, make, model, year, color, driver_commuter_id) "
-					+ "VALUES ('" + getSeats() + "', '" + getMake() + "', '"
-					+ getModel() + "', '" + getYear() + "', '" + getColor()
-					+ "', '" + commuterId + "')";
-			setID(db.create(sql));
+			String sql = "UPDATE vehicle SET capacity = '" + seats + "', make = '" + make + "', model = '"+ model 
+					+ "', year = '" + year + "', color = '" + color + "', driver_commuter_id = '" + commuterId + "';";
+			db.update(sql);
 			return sql;
 		}
 
 		@Override
-		public String retrieve() 
+		public String delete() 
 		{
-			if (commuterId <= 0) return null;
-			ArrayList<Vehicle> vehicles = new ArrayList<>();
-			String sql = "SELECT * FROM vehicle WHERE driver_commuter_id = '" + commuterId + "'";
-			parseResultSet(db.retrieve(sql));
-			db.closeConnection();
+			String sql = "DELETE FROM ride WHERE id = '" + id + "'";
+			db.update(sql);
 			return sql;
-		}
-
-		@Override
-		public String update() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public String delete() {
-			// TODO Auto-generated method stub
-			return null;
 		}
 
 		@Override
 		public void parseResultSet(ResultSet rs) 
 		{
-			try
-			{
-				if (rs.next())
-				{
+			try	{
+				if (rs.next()) {
+					id = rs.getInt("id");
 					seats = rs.getInt("capacity");
 					make = rs.getString("make");
 					model = rs.getString("model");
 					year = rs.getInt("year");
 					color = rs.getString("color");
-					id = rs.getInt("id");
 				}
-			} catch (SQLException eX)
-			{
+			} catch (SQLException eX) {
 				System.out.println("SQLException: " + eX.getMessage());
 				System.out.println("SQLState: " + eX.getSQLState());
 				System.out.println("VendorError: " + eX.getErrorCode());
@@ -117,10 +132,13 @@ public class Vehicle implements PersistentObject
 		}
 
 
+
 		@Override
 		public void manage(Scanner in) 
 		{
-			System.out.println("\nAdd Vehicle: ");
+			System.out.println("**** Add Vehicle ****");
+			System.out.println("Available seats: ");
+			seats = Integer.parseInt(in.nextLine());
 			System.out.println("Make: ");
 			make = in.nextLine();
 			System.out.println("Model: ");
@@ -129,8 +147,6 @@ public class Vehicle implements PersistentObject
 			year = Integer.parseInt(in.nextLine());
 			System.out.println("Color: ");
 			color = in.nextLine();
-			System.out.println("Seat capacity: ");
-			seats = Integer.parseInt(in.nextLine());
 		}
 
 }

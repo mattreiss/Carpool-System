@@ -1,6 +1,4 @@
-package Default;
-
-import System.Alert;
+package System;
 
 public interface NotificationObserver
 {

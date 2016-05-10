@@ -1,9 +1,9 @@
 package System;
 import java.util.Scanner;
 
-import Default.NotificationObserver;
+import PersistentObjects.Carpool;
 import PersistentObjects.Commuter;
-
+import PersistentObjects.Parking;
 
 /**
  * A class that interacts with users from a command line interface.
@@ -11,8 +11,8 @@ import PersistentObjects.Commuter;
 public class SystemInterface implements NotificationObserver
 {
 	private static Commuter commuter = null;
-	
-	
+	public static Scanner in = new Scanner(System.in);
+        private static Parking parking = new Parking(); 
 	public SystemInterface()
 	{
 		
@@ -27,7 +27,7 @@ public class SystemInterface implements NotificationObserver
 		{
 			while (!authenticated(in))
 			{
-				if (!tryAgain("authentication", in))
+				if (!tryAgain("Authentication", in))
 				{
 					System.out.println("Good bye!");
 					shouldExit = true;
@@ -35,6 +35,12 @@ public class SystemInterface implements NotificationObserver
 				}
 			}
 			if (shouldExit) break;
+			
+			do 
+			{ 
+				commuter.retrieveCarpoolRequests();
+				commuter.retrieveCarpools();
+			}
 			while (runCarpoolSystem(in));
 		}
 		in.close();
@@ -49,10 +55,9 @@ public class SystemInterface implements NotificationObserver
 		System.out.println("[1] Manage Account");
 		System.out.println("[2] Manage Schedule");
 		System.out.println("[3] Manage Rides");
-		//System.out.println("[4] Notifications (" + notification.confirmedStates.size() + ")");
-		//System.out.println("[5] Rewards");
-		//System.out.println("[6] Carpool Status");
-		//System.out.println("[6] Manage Parking");
+		System.out.println("[4] Notifications (" + (commuter.getNewCarpools().size() + commuter.getCarpools().size()) + ")");
+		System.out.println("[5] Rewards");
+		System.out.println("[6] Manage Parking");
 		System.out.println("[0] Log out");
 		
 		switch (in.nextLine())
@@ -65,12 +70,21 @@ public class SystemInterface implements NotificationObserver
 			commuter.manage(in);// the commuter does all the work to modify data
 			break;
 		case "2"://Schedule
-			commuter.manageSchedule(in); // modifies all the schedule data
+			commuter.manageSchedules(in); // modifies all the schedule data
 			break;
 		case "3"://Rides
+			commuter.manageRides(in);
 			break;
 		case "4"://Notifications
+			commuter.manageNotifications(in);
 			break;
+		case "5"://Rewards
+                        commuter.manageRewards(in);
+			break;
+		case "6"://Parking;
+                        parking.manage(commuter);
+			break;
+			
 		}
 		return commuter != null;
 	}
@@ -187,8 +201,13 @@ public class SystemInterface implements NotificationObserver
 
 	@Override
 	public void alert(Alert a) {
-		// TODO Auto-generated method stub
-		System.out.println("\n\n"+a.getAlert());
+		Carpool carpool = a.getCarpool();
+		if (carpool.getRide().getSchedule().getCommuterID() == commuter.getID() ||
+				carpool.getSchedule().getCommuterID() == commuter.getID())
+		{
+			System.out.println(a.getAlert());
+			commuter.ProcessNotification(carpool);
+		}
 	}
 	
 }

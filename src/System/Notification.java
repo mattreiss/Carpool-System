@@ -1,7 +1,5 @@
-package Default;
+package System;
 import java.util.ArrayList;
-
-import System.Alert;
 
 
 public abstract class Notification
